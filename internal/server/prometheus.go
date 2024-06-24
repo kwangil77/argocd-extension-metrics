@@ -110,7 +110,9 @@ func executeGraphQuery(ctx *gin.Context, queryExpression string, env map[string]
 	}
 
 	if len(warnings) > 0 {
-		return result, warnings, fmt.Errorf("query warnings: %s", err)
+		// return result, warnings, fmt.Errorf("query warnings: %s", err)
+		warningMsg := fmt.Errorf("query warnings: %s", warnings)
+		pp.logger.Warn(warningMsg.Error())
 	}
 
 	return result, nil, nil
@@ -161,8 +163,9 @@ func (pp *PrometheusProvider) execute(ctx *gin.Context) {
 		}
 		if len(warnings) > 0 {
 			warningMsg := fmt.Errorf("query warnings: %s", warnings)
-			ctx.JSON(http.StatusBadRequest, warningMsg.Error())
-			return
+			// 	ctx.JSON(http.StatusBadRequest, warningMsg.Error())
+			// 	return
+			pp.logger.Warn(warningMsg.Error())
 		}
 		data.Data, err = json.Marshal(result)
 		if err != nil {
@@ -189,8 +192,9 @@ func (pp *PrometheusProvider) execute(ctx *gin.Context) {
 				}
 				if len(warnings) > 0 {
 					warningMsg := fmt.Errorf("query warnings: %s", warnings)
-					ctx.JSON(http.StatusBadRequest, warningMsg.Error())
-					return
+					// 	ctx.JSON(http.StatusBadRequest, warningMsg.Error())
+					// 	return
+					pp.logger.Warn(warningMsg.Error())
 				}
 				var temp ThresholdResponse
 				temp.Unit = threshold.Unit
