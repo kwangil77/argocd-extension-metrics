@@ -163,9 +163,8 @@ func (pp *PrometheusProvider) execute(ctx *gin.Context) {
 		}
 		if len(warnings) > 0 {
 			warningMsg := fmt.Errorf("query warnings: %s", warnings)
-			// 	ctx.JSON(http.StatusBadRequest, warningMsg.Error())
-			// 	return
-			pp.logger.Warn(warningMsg.Error())
+			ctx.JSON(http.StatusBadRequest, warningMsg.Error())
+			return
 		}
 		data.Data, err = json.Marshal(result)
 		if err != nil {
@@ -192,9 +191,8 @@ func (pp *PrometheusProvider) execute(ctx *gin.Context) {
 				}
 				if len(warnings) > 0 {
 					warningMsg := fmt.Errorf("query warnings: %s", warnings)
-					// 	ctx.JSON(http.StatusBadRequest, warningMsg.Error())
-					// 	return
-					pp.logger.Warn(warningMsg.Error())
+					ctx.JSON(http.StatusBadRequest, warningMsg.Error())
+					return
 				}
 				var temp ThresholdResponse
 				temp.Unit = threshold.Unit
